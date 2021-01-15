@@ -2,7 +2,13 @@
 
 namespace App\Services;
 
-class EbaySearchProvider
-{
+use SearchInterface;
 
+class EbaySearchProvider implements SearchInterface
+{
+    public function search() {}
+
+    public function setParameters() {}
+
+    public function getResults() {}
 }
