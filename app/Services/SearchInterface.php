@@ -1,9 +1,10 @@
 <?php
 
-interface SearchInterface {
+namespace App\Services;
+
+interface SearchInterface
+{
+    public function setFilters();
+
     public function search();
-
-    public function setParameters();
-
-    public function getResults();
 }
