@@ -2,9 +2,10 @@
 
 namespace App;
 
+use JsonSerializable;
 use PHPUnit\Util\Json;
 
-class Product
+class Product implements JsonSerializable
 {
     private $provider;
     private $item_id;
@@ -18,9 +19,21 @@ class Product
     private $valid_until;
     private $brand;
 
-    public function toJson()
+    public function jsonSerialize()
     {
-        return json_encode($this);
+        return [
+            'provider' => $this->provider,
+            'item_id' => $this->item_id,
+            'click_out_link' => $this->click_out_link,
+            'main_photo_url' => $this->main_photo_url,
+            'price' => $this->price,
+            'price_currency' => $this->price_currency,
+            'shipping_price' => $this->shipping_price,
+            'title' => $this->title,
+            'description' => $this->description,
+            'valid_until' => $this->valid_until,
+            'brand' => $this->brand,
+        ];
     }
 
     /**

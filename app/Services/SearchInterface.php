@@ -6,5 +6,5 @@ interface SearchInterface
 {
     public function setFilters();
 
-    public function search();
+    public function findItemsByKeyword(string $keyword);
 }

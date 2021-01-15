@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\SearchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,11 +15,11 @@ class SearchController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, SearchService $service)
     {
         //
-        return response()->json([
-            'test' => 'zoli',
-        ]);
+        $service->search($request->get('keywords'));
+
+        return $service->getResults();
     }
 }
