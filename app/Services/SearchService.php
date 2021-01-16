@@ -19,11 +19,14 @@ class SearchService
         }
     }
 
-    public function getResults()
+    public function getProducts()
     {
-        foreach ($this->services as $service) {
-            return $service->getFeed()->getResults();
-        }
+        $
+    }
+
+    public function getProductsByFeed()
+    {
+        foreach ($th)
     }
 }
 
