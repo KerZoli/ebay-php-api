@@ -22,8 +22,8 @@ class EbayFeed implements FeedInterface
         $this->products[] = $product;
     }
 
-    public function getResults()
+    public function getResults(): array
     {
-        return json_encode($this->products);
+        return $this->products;
     }
 }

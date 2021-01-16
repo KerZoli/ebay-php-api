@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Services\Feed\EbaySearchService;
+use App\Services\Feed\EbaySearch\EbaySearchService;
 
 class SearchService
 {

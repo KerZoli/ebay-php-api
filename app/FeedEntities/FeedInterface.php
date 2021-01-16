@@ -8,5 +8,5 @@ interface FeedInterface
 {
     public function add(stdClass $data);
 
-    public function getResults();
+    public function getResults(): array;
 }
