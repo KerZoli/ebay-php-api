@@ -3,6 +3,7 @@
 namespace App\FeedEntities;
 
 use App\Product;
+use stdClass;
 
 class EbayFeed implements FeedInterface
 {
@@ -10,11 +11,14 @@ class EbayFeed implements FeedInterface
 
     private $products = [];
 
-    public function add(array $data)
+    public function add(stdClass $ProductItem)
     {
         $product = new Product();
         $product->setProvider(self::PROVIDER);
-        $product->setBrand('Test Brand');
+        $product->setItemId($ProductItem->itemId[0]);
+        $product->setPrice($ProductItem->sellingStatus[0]->currentPrice[0]->{'__value__'});
+        $product->setPriceCurrency($ProductItem->sellingStatus[0]->currentPrice[0]->{'@currencyId'});
+        $product->setTitle($ProductItem->title[0]);
         $this->products[] = $product;
     }
 

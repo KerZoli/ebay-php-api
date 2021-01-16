@@ -4,30 +4,61 @@ namespace App\Services\Feed;
 
 use App\FeedEntities\EbayFeed;
 use App\FeedEntities\FeedInterface;
+use Exception;
 use Illuminate\Support\Facades\Http;
-use App\Services\Feed\SearchInterface;
 
 class EbaySearchService implements SearchInterface
 {
+    //Currently support only JSON format
+    private const RESPONSE_DATA_FORMAT = 'JSON';
+    private const ENTRIES_PER_PAGE = 10;
 
     private $feed;
-    private $settings;
+    private $baseUrl;
+    private $serviceVersion;
+    private $appName;
+    private $operationName;
+    private $keywords;
 
-    public function __construct(EbayFeed $feed, array $settings)
+    public function __construct(EbayFeed $feed, string $baseUrl, string $serviceVersion, string $appName)
     {
         $this->feed = $feed;
-        $this->settings = $settings;
+        $this->baseUrl = $baseUrl;
+        $this->serviceVersion = $serviceVersion;
+        $this->appName = $appName;
     }
 
-    public function findItemsByKeyword(string $keyword)
+    /**
+     * @throws Exception
+     */
+    public function findItemsByKeyword(string $keywords)
     {
-      /*  $response = Http::get(
+        $this->operationName = 'findItemsByKeywords';
+        $this->keywords = $keywords;
 
-        );*/
+        $pageNr = 1;
+        while (true) {
+            $response = Http::get(
+                $this->baseUrl,
+                $this->buildSearchParams($pageNr)
+            );
 
-        $result = [[1], [2], [3]];
-        foreach ($result as $item) {
-            $this->feed->add($item);
+            $pageNr++;
+
+            $response = json_decode($response);
+
+            if (isset($response->findItemsByKeywordsResponse[0]->ack[0]) && $response->findItemsByKeywordsResponse[0]->ack[0] === 'Success') {
+                if ($pageNr > $response->findItemsByKeywordsResponse[0]->paginationOutput[0]->totalPages[0]) {
+                    break;
+                }
+
+                foreach ($response->findItemsByKeywordsResponse[0]->searchResult[0]->item as $item) {
+                    $this->feed->add($item);
+                }
+            } else {
+                throw new Exception('Failed to get feed data.');
+                break;
+            }
         }
     }
 
@@ -39,5 +70,18 @@ class EbaySearchService implements SearchInterface
     public function setFilters()
     {
         // TODO: Implement setFilters() method.
+    }
+
+    private function buildSearchParams(int $pageNr): array
+    {
+        return [
+            'OPERATION-NAME' => $this->operationName,
+            'SERVICE-VERSION' => $this->serviceVersion,
+            'SECURITY-APPNAME' => $this->appName,
+            'RESPONSE-DATA-FORMAT' => self::RESPONSE_DATA_FORMAT,
+            'keywords' => $this->keywords,
+            'paginationInput.entriesPerPage' => self::ENTRIES_PER_PAGE,
+            'paginationInput.pageNumber' => $pageNr,
+        ];
     }
 }
