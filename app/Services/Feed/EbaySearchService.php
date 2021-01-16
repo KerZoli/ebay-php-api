@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Type;
+namespace App\Services\Feed;
 
-use App\ProductFeeds\Feeds\EbayFeed;
+use App\FeedEntities\EbayFeed;
 use Illuminate\Support\Facades\Http;
-use App\Services\SearchInterface;
+use App\Services\Feed\SearchInterface;
 
 class EbaySearchService implements SearchInterface
 {
@@ -26,7 +26,7 @@ class EbaySearchService implements SearchInterface
 
         $result = [[1], [2], [3]];
         foreach ($result as $item) {
-            $this->feed->addProduct($item);
+            $this->feed->add($item);
         }
     }
 

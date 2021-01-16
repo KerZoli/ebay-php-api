@@ -18,8 +18,8 @@ class SearchController extends Controller
     public function __invoke(Request $request, SearchService $service)
     {
         //
-        $service->search($request->get('keywords'));
+        $service->getEbaySearchService()->findItemsByKeyword($request->get('keywords'));
 
-        return $service->getResults();
+        return $service->getEbaySearchService()->getFeed()->getResults();
     }
 }

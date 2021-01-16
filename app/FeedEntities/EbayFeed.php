@@ -1,19 +1,25 @@
 <?php
 
-namespace App\ProductFeeds\Feeds;
+namespace App\FeedEntities;
 
 use App\Product;
-use App\ProductFeeds\AbstractFeed;
 
-class EbayFeed extends AbstractFeed
+class EbayFeed implements FeedInterface
 {
     public const PROVIDER = 'ebay';
 
-    public function addProduct(array $data)
+    private $products = [];
+
+    public function add(array $data)
     {
         $product = new Product();
         $product->setProvider(self::PROVIDER);
         $product->setBrand('Test Brand');
         $this->products[] = $product;
+    }
+
+    public function getResults()
+    {
+        return json_encode($this->products);
     }
 }

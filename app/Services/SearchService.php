@@ -2,31 +2,20 @@
 
 namespace App\Services;
 
+use App\Services\Feed\EbaySearchService;
+
 class SearchService
 {
-    private $services = [];
-    private $results = [];
+    private $ebaySearchService;
 
-    public function __construct(array $searchServices)
+    public function __construct(EbaySearchService $ebaySearchService)
     {
-        $this->services = $searchServices;
+        $this->ebaySearchService = $ebaySearchService;
     }
 
-    public function search(string $keyword)
+    public function getEbaySearchService(): EbaySearchService
     {
-        foreach ($this->services as $service) {
-            $service->findItemsByKeyword($keyword);
-        }
-    }
-
-    public function getProducts()
-    {
-        $
-    }
-
-    public function getProductsByFeed()
-    {
-        foreach ($th)
+        return $this->ebaySearchService;
     }
 }
 
