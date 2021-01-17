@@ -18,6 +18,10 @@ class SearchController extends Controller
      */
     public function __invoke(Request $request, SearchService $service): JsonResponse
     {
+        if (!$request->get('keywords')) {
+            return response()->json('Keyword is missing. Please provide a keyword.');
+        }
+
         $ebayService = $service->getEbaySearchService();
 
         if ($request->get('price_min')) {
@@ -30,10 +34,6 @@ class SearchController extends Controller
 
         if ($request->get('sorting') && $request->get('sorting') !== 'default') {
             $ebayService->setSort($request->get('sorting'));
-        }
-
-        if (!$request->get('keywords')) {
-            throw new Exception('Keyword is missing. Please provide a keyword.');
         }
 
         $ebayService->findItemsByKeyword($request->get('keywords'));
