@@ -80,15 +80,6 @@ class EbaySearchService implements SearchInterface
         $this->filters[] = $this->filterFactory->make($value, $condition, $currency);
 
         return $this;
-        //PricePlusShippingLowest
-       /* itemFilter(0).name=MaxPrice&
-        itemFilter(0).value=2500.00&
-        itemFilter(0).paramName=Currency&
-        itemFilter(0).paramValue=USD&
-        itemFilter(1).name=MinPrice&
-        itemFilter(1).value=2000.00&
-        itemFilter(1).paramName=Currency&
-        itemFilter(1).paramValue=USD& */
     }
 
     public function setSort(string $type): self

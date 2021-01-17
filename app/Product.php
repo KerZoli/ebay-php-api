@@ -3,7 +3,6 @@
 namespace App;
 
 use JsonSerializable;
-use PHPUnit\Util\Json;
 
 class Product implements JsonSerializable
 {

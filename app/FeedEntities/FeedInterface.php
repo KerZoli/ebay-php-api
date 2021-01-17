@@ -6,7 +6,7 @@ use stdClass;
 
 interface FeedInterface
 {
-    public function add(stdClass $data);
+    public function add(stdClass $data): void;
 
     public function getResults(): array;
 }
