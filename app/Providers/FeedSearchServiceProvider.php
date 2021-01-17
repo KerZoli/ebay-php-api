@@ -19,7 +19,7 @@ class FeedSearchServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        $this->app->singleton(SearchService::class, function ($app) {
+        $this->app->bind(SearchService::class, function ($app) {
             $config = $app['config'];
             $feedSettings = $config->get('feeds');
 

@@ -7,7 +7,7 @@ use stdClass;
 
 class EbayFeed implements FeedInterface
 {
-    public const PROVIDER = 'ebay';
+    private const PROVIDER = 'ebay';
 
     private $products = [];
 

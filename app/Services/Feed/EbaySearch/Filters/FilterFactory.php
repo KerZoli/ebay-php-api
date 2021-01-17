@@ -12,6 +12,6 @@ class FilterFactory
            return new PriceFilter($value, $currency, 'MaxPrice');
         }
 
-        return $this->filters[] = new PriceFilter($value, $currency, 'MinPrice');
+        return new PriceFilter($value, $currency, 'MinPrice');
     }
 }

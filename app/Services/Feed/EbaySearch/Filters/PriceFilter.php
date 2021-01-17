@@ -17,7 +17,8 @@ class PriceFilter implements FilterInterface
         $this->filterName = $filterName;
     }
 
-    public function getItemFilters(): array {
+    public function getItemFilters(): array
+    {
         $filters = [
             'name' => $this->filterName,
             'value' => $this->value,
