@@ -19,7 +19,12 @@ class SearchController extends Controller
     public function __invoke(Request $request, SearchService $service): JsonResponse
     {
         if (!$request->get('keywords')) {
-            return response()->json('Keyword is missing. Please provide a keyword.');
+            return response()->json([
+                'error' => [
+                    'code' => 404,
+                    'message' => 'Keyword is missing. Please provide a keyword.'
+                ]
+            ]);
         }
 
         $ebayService = $service->getEbaySearchService();
