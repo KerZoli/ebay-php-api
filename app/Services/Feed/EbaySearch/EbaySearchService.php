@@ -4,8 +4,8 @@ namespace App\Services\Feed\EbaySearch;
 
 use App\FeedEntities\EbayFeed;
 use App\FeedEntities\FeedInterface;
+use App\Services\Feed\EbaySearch\Filters\FilterFactory;
 use App\Services\Feed\SearchInterface;
-use App\Services\Feed\EbaySearch\Filters\PriceFilter;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
@@ -21,12 +21,15 @@ class EbaySearchService implements SearchInterface
     private $appName;
     private $operationName;
     private $keywords;
-    private $filters;
     private $sort;
+    private $sortOrder;
+    private $filterFactory;
+    private $filters = [];
 
-    public function __construct(EbayFeed $feed, EbaySortOrder $sort, string $baseUrl, string $serviceVersion, string $appName)
+    public function __construct(EbayFeed $feed, FilterFactory $filterFactory, EbaySortOrder $sort, string $baseUrl, string $serviceVersion, string $appName)
     {
         $this->feed = $feed;
+        $this->filterFactory = $filterFactory;
         $this->sort = $sort;
         $this->baseUrl = $baseUrl;
         $this->serviceVersion = $serviceVersion;
@@ -47,9 +50,14 @@ class EbaySearchService implements SearchInterface
             $pageNr++;
             $response = json_decode($response);
 
-            if (isset($response->findItemsByKeywordsResponse[0]->ack[0]) && $response->findItemsByKeywordsResponse[0]->ack[0] === 'Success') {
-                foreach ($response->findItemsByKeywordsResponse[0]->searchResult[0]->item as $item) {
-                    $this->feed->add($item);
+            if (isset($response->findItemsByKeywordsResponse[0]->ack[0])
+                && $response->findItemsByKeywordsResponse[0]->ack[0] === 'Success'
+                ) {
+
+                if ($response->findItemsByKeywordsResponse[0]->paginationOutput[0]->totalEntries[0] > 0) {
+                    foreach ($response->findItemsByKeywordsResponse[0]->searchResult[0]->item as $item) {
+                        $this->feed->add($item);
+                    }
                 }
 
                 if ($pageNr > $response->findItemsByKeywordsResponse[0]->paginationOutput[0]->totalPages[0]) {
@@ -67,13 +75,9 @@ class EbaySearchService implements SearchInterface
         return $this->feed;
     }
 
-    public function setPriceFilter($value, $condition, $currency = ''): self
+    public function setFilter($value, $condition, $currency = ''): self
     {
-        if ($condition === '<') {
-            $this->filters[] = new PriceFilter($value, $currency, 'MaxPrice');
-        } else {
-            $this->filters[] = new PriceFilter($value, $currency, 'MinPrice');
-        }
+        $this->filters[] = $this->filterFactory->make($value, $condition, $currency);
 
         return $this;
         //PricePlusShippingLowest
