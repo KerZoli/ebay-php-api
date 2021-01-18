@@ -20,10 +20,9 @@ class SearchController extends Controller
     {
         if (!$request->get('keywords')) {
             return response()->json([
-                'error' => [
-                    'code' => 404,
-                    'message' => 'Keyword is missing. Please provide a keyword.'
-                ]
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Keyword is missing. Please provide a keyword.'
             ]);
         }
 
@@ -43,6 +42,12 @@ class SearchController extends Controller
 
         $ebayService->findItemsByKeyword($request->get('keywords'));
 
-        return response()->json($service->getEbaySearchService()->getFeed()->getResults());
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => $service->getEbaySearchService()->getFeed()->getResults(),
+                'message' => null,
+            ]
+        );
     }
 }
